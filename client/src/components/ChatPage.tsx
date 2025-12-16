@@ -684,7 +684,7 @@ export default function ChatPage() {
             <motion.aside
                 initial={{ x: -300 }}
                 animate={{ x: showMobileMenu ? 0 : 0 }}
-                className={`fixed md:relative md:translate-x-0 w-[280px] h-full glass-panel flex flex-col z-40 md:flex ${showMobileMenu ? 'flex' : 'hidden'}`}
+                className={`fixed inset-y-0 left-0 z-40 w-[280px] h-full glass-panel flex flex-col md:relative md:translate-x-0 md:flex ${showMobileMenu ? 'flex' : 'hidden'}`}
             >
                 {/* Header */}
                 <div className="p-6 pb-4">
@@ -884,18 +884,18 @@ export default function ChatPage() {
             {/* Main Chat Area */}
             <main className="flex-1 flex flex-col min-w-0 bg-transparent h-full">
                 {/* Header */}
-                <header className="h-[72px] px-6 flex items-center justify-between border-b border-white/5 bg-black/20 backdrop-blur-md sticky top-0 z-10">
-                    <div className="flex items-center gap-4">
+                <header className="h-[72px] px-4 md:px-6 flex items-center justify-between border-b border-white/5 bg-black/20 backdrop-blur-md sticky top-0 z-10 shrink-0">
+                    <div className="flex items-center gap-3 md:gap-4 overflow-hidden">
                         <button
                             onClick={() => setShowMobileMenu(true)}
-                            className="p-2 -ml-2 text-gray-400 hover:text-white md:hidden"
+                            className="p-2 -ml-2 text-gray-400 hover:text-white md:hidden shrink-0"
                         >
                             <Users size={20} />
                         </button>
 
                         {selectedFriend ? (
-                            <div className="flex items-center gap-3">
-                                <div className="relative">
+                            <div className="flex items-center gap-3 min-w-0">
+                                <div className="relative shrink-0">
                                     <img
                                         src={selectedFriend.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${selectedFriend.username}`}
                                         alt={selectedFriend.username}
@@ -907,11 +907,11 @@ export default function ChatPage() {
                                     <span className={`absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-gray-900 ${selectedFriend.status === 'online' ? 'bg-green-500' : 'bg-gray-500'
                                         }`} />
                                 </div>
-                                <div>
+                                <div className="min-w-0">
                                     <div className="flex items-center gap-2">
-                                        <h2 className="text-lg font-bold text-white">{selectedFriend.username}</h2>
+                                        <h2 className="text-lg font-bold text-white truncate">{selectedFriend.username}</h2>
                                         {encryptionReady && (
-                                            <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-500/20 text-green-400 text-[10px] font-medium">
+                                            <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-500/20 text-green-400 text-[10px] font-medium shrink-0">
                                                 <Lock size={10} />
                                                 E2E
                                             </span>
