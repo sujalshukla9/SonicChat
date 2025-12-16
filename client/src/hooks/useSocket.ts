@@ -121,7 +121,7 @@ export const useSocket = () => {
             fetchFriends();
         });
 
-        socket.on('friend_request_rejected', (data: { rejecterId: string }) => {
+        socket.on('friend_request_rejected', () => {
             console.log(`❌ Friend request rejected`);
         });
 

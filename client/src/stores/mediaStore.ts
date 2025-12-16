@@ -42,7 +42,7 @@ interface MediaState {
     removeFromProgress: (fileId: string) => void;
 }
 
-export const useMediaStore = create<MediaState>((set, get) => ({
+export const useMediaStore = create<MediaState>((set) => ({
     images: [],
     videos: [],
     uploadProgress: [],
