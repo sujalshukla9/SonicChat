@@ -21,10 +21,17 @@ import dataRoutes from './routes/data';
 const app = express();
 const httpServer = createServer(app);
 
+// CORS Configuration
+const allowedOrigins = [
+    "http://localhost:5173",
+    "https://sonic-chat-five.vercel.app",
+    process.env.CLIENT_URL
+].filter((origin): origin is string => !!origin);
+
 // Socket.io setup with CORS
 const io = new Server(httpServer, {
     cors: {
-        origin: process.env.CLIENT_URL || "http://localhost:5173",
+        origin: allowedOrigins,
         methods: ["GET", "POST"],
         credentials: true
     }
@@ -32,7 +39,7 @@ const io = new Server(httpServer, {
 
 // Middleware
 app.use(cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: allowedOrigins,
     credentials: true
 }));
 app.use(express.json());
