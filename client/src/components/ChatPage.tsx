@@ -4,7 +4,7 @@ import {
     Send, Users, LogOut, Settings, Search,
     MessageCircle, MoreVertical, Smile,
     Bell, Sun, X, UserPlus, Check, Clock, Edit3, Mic, MicOff, UserMinus, Lock,
-    Paperclip, Image, Video, FileText, File, Download, Trash2
+    Paperclip, Image, Video, FileText, File, Download, Trash2, ArrowLeft
 } from 'lucide-react';
 import { useAuthStore } from '../stores/authStore';
 import { useChatStore } from '../stores/chatStore';
@@ -707,10 +707,9 @@ export default function ChatPage() {
 
             {/* Sidebar */}
             <motion.aside
-                initial={{ x: -280 }}
-                animate={{ x: (showMobileMenu || window.innerWidth >= 768) ? 0 : -280 }}
-                transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-                className={`fixed inset-y-0 left-0 z-40 w-[280px] h-full glass-panel flex flex-col md:relative md:translate-x-0 md:flex ${showMobileMenu ? 'flex' : 'hidden md:flex'}`}
+                initial={window.innerWidth < 768 ? { opacity: 0 } : { x: -280 }}
+                animate={window.innerWidth < 768 ? { opacity: 1 } : { x: 0 }}
+                className={`fixed inset-y-0 left-0 z-40 w-full md:w-[280px] h-full glass-panel flex flex-col md:relative md:translate-x-0 ${(!selectedFriend || showMobileMenu) ? 'flex' : 'hidden md:flex'}`}
             >
                 {/* Header */}
                 <div className="p-6 pb-4">
@@ -908,16 +907,25 @@ export default function ChatPage() {
             </motion.aside>
 
             {/* Main Chat Area */}
-            <main className="flex-1 flex flex-col min-w-0 bg-transparent h-full">
+            <main className={`flex-1 flex flex-col min-w-0 bg-transparent h-full ${selectedFriend ? 'flex' : 'hidden md:flex'}`}>
                 {/* Header */}
                 <header className="h-[60px] md:h-[72px] px-3 md:px-6 flex items-center justify-between border-b border-white/5 bg-black/20 backdrop-blur-md sticky top-0 z-10 shrink-0">
                     <div className="flex items-center gap-2 md:gap-4 overflow-hidden flex-1">
-                        <button
-                            onClick={() => setShowMobileMenu(true)}
-                            className="p-2 -ml-2 text-gray-400 hover:text-white md:hidden shrink-0"
-                        >
-                            <Users size={20} />
-                        </button>
+                        {selectedFriend ? (
+                            <button
+                                onClick={() => setSelectedFriend(null)}
+                                className="p-2 -ml-2 text-gray-400 hover:text-white md:hidden shrink-0"
+                            >
+                                <ArrowLeft size={20} />
+                            </button>
+                        ) : (
+                            <button
+                                onClick={() => setShowMobileMenu(true)}
+                                className="p-2 -ml-2 text-gray-400 hover:text-white md:hidden shrink-0"
+                            >
+                                <Users size={20} />
+                            </button>
+                        )}
 
                         {selectedFriend ? (
                             <div className="flex items-center gap-2 md:gap-3 min-w-0 flex-1">
