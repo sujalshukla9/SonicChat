@@ -909,70 +909,68 @@ export default function ChatPage() {
             {/* Main Chat Area */}
             <main className={`flex-1 flex flex-col min-w-0 bg-transparent h-full ${selectedFriend ? 'flex' : 'hidden md:flex'}`}>
                 {/* Header */}
-                <header className="h-[60px] md:h-[72px] px-3 md:px-6 flex items-center justify-between border-b border-white/5 bg-black/20 backdrop-blur-md sticky top-0 z-10 shrink-0">
-                    <div className="flex items-center gap-2 md:gap-4 overflow-hidden flex-1">
+                <header className="h-[60px] md:h-[72px] px-3 md:px-4 flex items-center justify-between border-b border-white/5 bg-[#0f0f13] backdrop-blur-xl z-30 shrink-0 relative pt-[env(safe-area-inset-top)]">
+                    <div className="flex items-center gap-2 md:gap-4 min-w-0 flex-1">
                         {selectedFriend ? (
-                            <button
-                                onClick={() => setSelectedFriend(null)}
-                                className="p-2 -ml-2 text-gray-400 hover:text-white md:hidden shrink-0"
-                            >
-                                <ArrowLeft size={20} />
-                            </button>
-                        ) : (
-                            <button
-                                onClick={() => setShowMobileMenu(true)}
-                                className="p-2 -ml-2 text-gray-400 hover:text-white md:hidden shrink-0"
-                            >
-                                <Users size={20} />
-                            </button>
-                        )}
-
-                        {selectedFriend ? (
-                            <div className="flex items-center gap-2 md:gap-3 min-w-0 flex-1">
-                                <div className="relative shrink-0">
-                                    <img
-                                        src={selectedFriend.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${selectedFriend.username}`}
-                                        alt={selectedFriend.username}
-                                        className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-800 object-cover"
-                                        onError={(e) => {
-                                            (e.target as HTMLImageElement).src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${selectedFriend.username}`;
-                                        }}
-                                    />
-                                    <span className={`absolute bottom-0 right-0 w-2 h-2 md:w-2.5 md:h-2.5 rounded-full border-2 border-gray-900 ${selectedFriend.status === 'online' ? 'bg-green-500' : 'bg-gray-500'
-                                        }`} />
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                    <div className="flex items-center gap-1.5 md:gap-2">
-                                        <h2 className="text-sm md:text-lg font-bold text-white truncate">{selectedFriend.username}</h2>
-                                        {encryptionReady && (
-                                            <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-green-500/20 text-green-400 text-[8px] md:text-[10px] font-medium shrink-0">
-                                                <Lock size={8} className="md:w-[10px] md:h-[10px]" />
-                                                <span className="hidden xs:inline">E2E</span>
-                                            </span>
+                            <>
+                                <button
+                                    onClick={() => setSelectedFriend(null)}
+                                    className="p-2 -ml-2 text-gray-400 hover:text-white md:hidden shrink-0"
+                                >
+                                    <ArrowLeft size={20} />
+                                </button>
+                                <div className="flex items-center gap-2 md:gap-3 min-w-0 flex-1">
+                                    <div className="relative shrink-0">
+                                        <img
+                                            src={selectedFriend.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${selectedFriend.username}`}
+                                            alt={selectedFriend.username}
+                                            className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-800 object-cover"
+                                            onError={(e) => {
+                                                (e.target as HTMLImageElement).src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${selectedFriend.username}`;
+                                            }}
+                                        />
+                                        <span className={`absolute bottom-0 right-0 w-2 h-2 md:w-2.5 md:h-2.5 rounded-full border-2 border-gray-900 ${selectedFriend.status === 'online' ? 'bg-green-500' : 'bg-gray-500'}`} />
+                                    </div>
+                                    <div className="min-w-0 flex-1">
+                                        <div className="flex items-center gap-1.5 md:gap-2">
+                                            <h2 className="text-sm md:text-lg font-bold text-white truncate">{selectedFriend.username}</h2>
+                                            {encryptionReady && (
+                                                <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-green-500/20 text-green-400 text-[8px] md:text-[10px] font-medium shrink-0">
+                                                    <Lock size={8} className="md:w-[10px] md:h-[10px]" />
+                                                    <span className="hidden xs:inline">E2E</span>
+                                                </span>
+                                            )}
+                                        </div>
+                                        {roomTypingUsers.some((t: { odlserId?: string; userId?: string }) => t.odlserId === selectedFriend._id || t.userId === selectedFriend._id) ? (
+                                            <p className="text-[10px] md:text-xs font-medium text-purple-400 flex items-center gap-1">
+                                                <span className="flex gap-0.5">
+                                                    <span className="w-1 h-1 md:w-1.5 md:h-1.5 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                                                    <span className="w-1 h-1 md:w-1.5 md:h-1.5 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                                                    <span className="w-1 h-1 md:w-1.5 md:h-1.5 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                                                </span>
+                                                typing...
+                                            </p>
+                                        ) : (
+                                            <p className={`text-[10px] md:text-xs font-medium truncate ${selectedFriend.status === 'online' ? 'text-green-400' : 'text-gray-500'}`}>
+                                                {selectedFriend.status === 'online' ? 'Online' : `Last seen ${formatLastSeen(selectedFriend.lastSeen)}`}
+                                            </p>
                                         )}
                                     </div>
-                                    {/* Typing indicator */}
-                                    {roomTypingUsers.some((t: { odlserId?: string; userId?: string }) => t.odlserId === selectedFriend._id || t.userId === selectedFriend._id) ? (
-                                        <p className="text-[10px] md:text-xs font-medium text-purple-400 flex items-center gap-1">
-                                            <span className="flex gap-0.5">
-                                                <span className="w-1 h-1 md:w-1.5 md:h-1.5 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                                                <span className="w-1 h-1 md:w-1.5 md:h-1.5 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                                                <span className="w-1 h-1 md:w-1.5 md:h-1.5 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-                                            </span>
-                                            typing...
-                                        </p>
-                                    ) : (
-                                        <p className={`text-[10px] md:text-xs font-medium truncate ${selectedFriend.status === 'online' ? 'text-green-400' : 'text-gray-500'}`}>
-                                            {selectedFriend.status === 'online' ? 'Online' : `Last seen ${formatLastSeen(selectedFriend.lastSeen)}`}
-                                        </p>
-                                    )}
                                 </div>
-                            </div>
+                            </>
                         ) : (
-                            <div>
-                                <h2 className="text-sm md:text-lg font-bold text-white">Select a friend</h2>
-                                <p className="text-[10px] md:text-xs text-gray-500 truncate">Choose someone to start chatting</p>
-                            </div>
+                            <>
+                                <button
+                                    onClick={() => setShowMobileMenu(true)}
+                                    className="p-2 -ml-2 text-gray-400 hover:text-white md:hidden shrink-0"
+                                >
+                                    <Users size={20} />
+                                </button>
+                                <div>
+                                    <h2 className="text-sm md:text-lg font-bold text-white">Select a friend</h2>
+                                    <p className="text-[10px] md:text-xs text-gray-400 truncate">Choose someone to start chatting</p>
+                                </div>
+                            </>
                         )}
                     </div>
 
