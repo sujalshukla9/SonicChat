@@ -682,9 +682,10 @@ export default function ChatPage() {
 
             {/* Sidebar */}
             <motion.aside
-                initial={{ x: -300 }}
-                animate={{ x: showMobileMenu ? 0 : 0 }}
-                className={`fixed inset-y-0 left-0 z-40 w-[280px] h-full glass-panel flex flex-col md:relative md:translate-x-0 md:flex ${showMobileMenu ? 'flex' : 'hidden'}`}
+                initial={{ x: -280 }}
+                animate={{ x: (showMobileMenu || window.innerWidth >= 768) ? 0 : -280 }}
+                transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+                className={`fixed inset-y-0 left-0 z-40 w-[280px] h-full glass-panel flex flex-col md:relative md:translate-x-0 md:flex ${showMobileMenu ? 'flex' : 'hidden md:flex'}`}
             >
                 {/* Header */}
                 <div className="p-6 pb-4">
@@ -884,8 +885,8 @@ export default function ChatPage() {
             {/* Main Chat Area */}
             <main className="flex-1 flex flex-col min-w-0 bg-transparent h-full">
                 {/* Header */}
-                <header className="h-[72px] px-4 md:px-6 flex items-center justify-between border-b border-white/5 bg-black/20 backdrop-blur-md sticky top-0 z-10 shrink-0">
-                    <div className="flex items-center gap-3 md:gap-4 overflow-hidden">
+                <header className="h-[60px] md:h-[72px] px-3 md:px-6 flex items-center justify-between border-b border-white/5 bg-black/20 backdrop-blur-md sticky top-0 z-10 shrink-0">
+                    <div className="flex items-center gap-2 md:gap-4 overflow-hidden flex-1">
                         <button
                             onClick={() => setShowMobileMenu(true)}
                             className="p-2 -ml-2 text-gray-400 hover:text-white md:hidden shrink-0"
@@ -894,41 +895,41 @@ export default function ChatPage() {
                         </button>
 
                         {selectedFriend ? (
-                            <div className="flex items-center gap-3 min-w-0">
+                            <div className="flex items-center gap-2 md:gap-3 min-w-0 flex-1">
                                 <div className="relative shrink-0">
                                     <img
                                         src={selectedFriend.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${selectedFriend.username}`}
                                         alt={selectedFriend.username}
-                                        className="w-10 h-10 rounded-full bg-gray-800 object-cover"
+                                        className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-800 object-cover"
                                         onError={(e) => {
                                             (e.target as HTMLImageElement).src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${selectedFriend.username}`;
                                         }}
                                     />
-                                    <span className={`absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-gray-900 ${selectedFriend.status === 'online' ? 'bg-green-500' : 'bg-gray-500'
+                                    <span className={`absolute bottom-0 right-0 w-2 h-2 md:w-2.5 md:h-2.5 rounded-full border-2 border-gray-900 ${selectedFriend.status === 'online' ? 'bg-green-500' : 'bg-gray-500'
                                         }`} />
                                 </div>
-                                <div className="min-w-0">
-                                    <div className="flex items-center gap-2">
-                                        <h2 className="text-lg font-bold text-white truncate">{selectedFriend.username}</h2>
+                                <div className="min-w-0 flex-1">
+                                    <div className="flex items-center gap-1.5 md:gap-2">
+                                        <h2 className="text-sm md:text-lg font-bold text-white truncate">{selectedFriend.username}</h2>
                                         {encryptionReady && (
-                                            <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-500/20 text-green-400 text-[10px] font-medium shrink-0">
-                                                <Lock size={10} />
-                                                E2E
+                                            <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-green-500/20 text-green-400 text-[8px] md:text-[10px] font-medium shrink-0">
+                                                <Lock size={8} className="md:w-[10px] md:h-[10px]" />
+                                                <span className="hidden xs:inline">E2E</span>
                                             </span>
                                         )}
                                     </div>
                                     {/* Typing indicator */}
                                     {roomTypingUsers.some((t: { odlserId?: string; userId?: string }) => t.odlserId === selectedFriend._id || t.userId === selectedFriend._id) ? (
-                                        <p className="text-xs font-medium text-purple-400 flex items-center gap-1">
+                                        <p className="text-[10px] md:text-xs font-medium text-purple-400 flex items-center gap-1">
                                             <span className="flex gap-0.5">
-                                                <span className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                                                <span className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                                                <span className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                                                <span className="w-1 h-1 md:w-1.5 md:h-1.5 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                                                <span className="w-1 h-1 md:w-1.5 md:h-1.5 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                                                <span className="w-1 h-1 md:w-1.5 md:h-1.5 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                                             </span>
                                             typing...
                                         </p>
                                     ) : (
-                                        <p className={`text-xs font-medium ${selectedFriend.status === 'online' ? 'text-green-400' : 'text-gray-500'}`}>
+                                        <p className={`text-[10px] md:text-xs font-medium truncate ${selectedFriend.status === 'online' ? 'text-green-400' : 'text-gray-500'}`}>
                                             {selectedFriend.status === 'online' ? 'Online' : `Last seen ${formatLastSeen(selectedFriend.lastSeen)}`}
                                         </p>
                                     )}
@@ -936,8 +937,8 @@ export default function ChatPage() {
                             </div>
                         ) : (
                             <div>
-                                <h2 className="text-lg font-bold text-white">Select a friend</h2>
-                                <p className="text-xs text-gray-500">Choose someone to start chatting</p>
+                                <h2 className="text-sm md:text-lg font-bold text-white">Select a friend</h2>
+                                <p className="text-[10px] md:text-xs text-gray-500 truncate">Choose someone to start chatting</p>
                             </div>
                         )}
                     </div>
@@ -1042,7 +1043,7 @@ export default function ChatPage() {
                 </header>
 
                 {/* Messages */}
-                <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 scrollbar-thin">
+                <div className="flex-1 overflow-y-auto p-3 md:p-8 space-y-4 md:space-y-6 scrollbar-thin">
                     {!selectedFriend ? (
                         <div className="flex flex-col items-center justify-center h-full text-center">
                             <div className="w-24 h-24 rounded-3xl bg-linear-to-tr from-cyan-500/10 to-purple-500/10 flex items-center justify-center mb-6 border border-white/5 shadow-2xl shadow-purple-500/5">
@@ -1086,9 +1087,9 @@ export default function ChatPage() {
                                             initial={{ opacity: 0, y: 10, scale: 0.98 }}
                                             animate={{ opacity: 1, y: 0, scale: 1 }}
                                             layout
-                                            className={`flex ${isOwn ? 'justify-end' : 'justify-start'} group ${isConsecutive ? 'mt-1' : 'mt-6'}`}
+                                            className={`flex ${isOwn ? 'justify-end' : 'justify-start'} group ${isConsecutive ? 'mt-0.5' : 'mt-4 md:mt-6'}`}
                                         >
-                                            <div className={`flex gap-3 max-w-[85%] md:max-w-[70%] ${isOwn ? 'flex-row-reverse' : ''}`}>
+                                            <div className={`flex gap-2 md:gap-3 max-w-[90%] md:max-w-[70%] ${isOwn ? 'flex-row-reverse' : ''}`}>
                                                 {!isOwn && (
                                                     <div className="w-8 shrink-0 flex flex-col items-center">
                                                         {showAvatar ? (
@@ -1114,7 +1115,7 @@ export default function ChatPage() {
                                                     )}
 
                                                     <div
-                                                        className={`px-5 py-3 rounded-2xl relative shadow-md transition-all ${isOwn
+                                                        className={`px-3 md:px-5 py-2 md:py-3 rounded-2xl relative shadow-md transition-all ${isOwn
                                                             ? 'bg-linear-to-br from-cyan-600 to-blue-600 text-white rounded-tr-sm hover:shadow-cyan-500/10'
                                                             : 'glass-panel-light text-gray-200 rounded-tl-sm hover:bg-white/5'
                                                             }`}
@@ -1243,8 +1244,8 @@ export default function ChatPage() {
 
                 {/* Input Area */}
                 {selectedFriend && (
-                    <div className="p-6 pt-2">
-                        <div className="p-2 rounded-2xl flex items-end gap-2 relative bg-black/40 backdrop-blur-xl shadow-2xl">
+                    <div className="p-3 md:p-6 pt-0 md:pt-2">
+                        <div className="p-1.5 md:p-2 rounded-2xl flex items-end gap-1 md:gap-2 relative bg-black/40 backdrop-blur-xl shadow-2xl">
                             {/* Typing users overlay */}
                             <AnimatePresence>
                                 {roomTypingUsers.length > 0 && (
@@ -1281,8 +1282,8 @@ export default function ChatPage() {
                                     }}
                                     rows={1}
                                     placeholder={`Message ${selectedFriend.username}...`}
-                                    className="w-full bg-transparent border-none text-white placeholder-gray-500 focus:ring-0 focus:outline-none resize-none py-3 px-4 min-h-[44px] max-h-[120px] scrollbar-hide text-[15px]"
-                                    style={{ height: 'auto', minHeight: '44px' }}
+                                    className="w-full bg-transparent border-none text-white placeholder-gray-500 focus:ring-0 focus:outline-none resize-none py-2.5 md:py-3 px-3 md:px-4 min-h-[40px] md:min-h-[44px] max-h-[120px] scrollbar-hide text-sm md:text-[15px]"
+                                    style={{ height: 'auto', minHeight: '40px' }}
                                 />
                             </div>
 
@@ -1391,7 +1392,7 @@ export default function ChatPage() {
                                             initial={{ opacity: 0, scale: 0.9, y: 10 }}
                                             animate={{ opacity: 1, scale: 1, y: 0 }}
                                             exit={{ opacity: 0, scale: 0.9, y: 10 }}
-                                            className="absolute bottom-full right-0 mb-2 z-50"
+                                            className="absolute bottom-full right-0 mb-2 z-50 w-[280px] xs:w-[320px]"
                                         >
                                             <EmojiPicker
                                                 theme={Theme.DARK}
@@ -1399,8 +1400,8 @@ export default function ChatPage() {
                                                     setCurrentMessage(prev => prev + emojiData.emoji);
                                                     setShowEmojiPicker(false);
                                                 }}
-                                                width={300}
-                                                height={400}
+                                                width="100%"
+                                                height={350}
                                             />
                                         </motion.div>
                                     )}

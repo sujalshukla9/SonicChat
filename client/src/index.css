@@ -12,6 +12,7 @@
 @theme {
   --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-display: 'Outfit', system-ui, sans-serif;
+  --breakpoint-xs: 375px;
 }
 
 body {

@@ -65,33 +65,33 @@ export default function AuthPage() {
             <div className="relative z-10 w-full min-h-[100dvh] flex flex-col lg:flex-row lg:items-center lg:justify-center">
 
                 {/* Mobile/Tablet: Stacked Layout | Desktop: Side by Side */}
-                <div className="w-full max-w-md lg:max-w-5xl mx-auto flex flex-col lg:flex-row items-center lg:items-center gap-6 sm:gap-8 lg:gap-20 px-5 sm:px-8 py-8 sm:py-12 lg:py-16">
+                <div className="w-full max-w-md lg:max-w-5xl mx-auto flex flex-col lg:flex-row items-center lg:items-center gap-4 sm:gap-8 lg:gap-20 px-4 sm:px-8 py-6 sm:py-12 lg:py-16">
 
                     {/* Branding Section */}
                     <motion.div
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
-                        className="flex flex-col items-center lg:items-start text-center lg:text-left lg:flex-1"
+                        className="flex flex-col items-center lg:items-start text-center lg:text-left lg:flex-1 w-full"
                     >
                         {/* Logo */}
-                        <div className="relative mb-4 sm:mb-6">
+                        <div className="relative mb-3 sm:mb-6">
                             <div className="absolute inset-0 bg-linear-to-r from-cyan-500 to-purple-600 blur-xl opacity-60 rounded-full scale-150"></div>
                             <motion.div
                                 whileHover={{ scale: 1.05 }}
-                                className="relative w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-black/60 backdrop-blur-xl rounded-2xl lg:rounded-3xl border border-white/15 shadow-2xl flex items-center justify-center"
+                                className="relative w-14 h-14 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-black/60 backdrop-blur-xl rounded-2xl lg:rounded-3xl border border-white/15 shadow-2xl flex items-center justify-center"
                             >
-                                <MessageCircle className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-white" strokeWidth={1.5} />
+                                <MessageCircle className="w-7 h-7 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-white" strokeWidth={1.5} />
                             </motion.div>
                         </div>
 
                         {/* Title */}
-                        <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight text-white mb-2 sm:mb-3">
+                        <h1 className="text-2xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight text-white mb-1.5 sm:mb-3">
                             Sonic<span className="text-transparent bg-clip-text bg-linear-to-r from-cyan-400 via-purple-400 to-pink-400">Chat</span>
                         </h1>
 
                         {/* Tagline */}
-                        <p className="text-gray-400 text-sm sm:text-base lg:text-lg font-light max-w-xs sm:max-w-sm lg:max-w-md leading-relaxed">
+                        <p className="text-gray-400 text-xs sm:text-base lg:text-lg font-light max-w-xs sm:max-w-sm lg:max-w-md leading-relaxed">
                             <span className="hidden sm:inline">Experience the future of communication. </span>
                             <span className="text-gray-300">Fast, Secure & Beautiful.</span>
                         </p>
@@ -116,9 +116,9 @@ export default function AuthPage() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.1 }}
-                        className="w-full max-w-sm sm:max-w-md lg:w-[400px] lg:flex-shrink-0"
+                        className="w-full max-w-[calc(100vw-32px)] sm:max-w-md lg:w-[400px] lg:flex-shrink-0"
                     >
-                        <div className="rounded-2xl sm:rounded-3xl p-5 sm:p-6 lg:p-8 border border-white/10 bg-black/50 backdrop-blur-xl shadow-2xl">
+                        <div className="rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 border border-white/10 bg-black/50 backdrop-blur-xl shadow-2xl">
 
                             {/* Toggle Switch */}
                             <div className="relative flex bg-white/5 p-1 rounded-xl border border-white/5 mb-5 sm:mb-6">
