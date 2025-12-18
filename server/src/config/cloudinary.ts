@@ -11,13 +11,14 @@ const cloudinaryConfig = {
 
     // Allowed file types
     allowedImageTypes: ['image/jpeg', 'image/png', 'image/gif', 'image/webp'],
-    allowedVideoTypes: ['video/mp4', 'video/webm', 'video/quicktime', 'video/x-msvideo'],
+    allowedVideoTypes: ['video/mp4', 'video/webm', 'video/quicktime', 'video/x-msvideo', 'audio/mpeg', 'audio/wav', 'audio/webm', 'audio/ogg', 'audio/mp3'],
     allowedDocumentTypes: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain'],
 
     // Folders for organization
     folders: {
         images: 'sschats/images',
         videos: 'sschats/videos',
+        audio: 'sschats/audio',
         documents: 'sschats/documents'
     }
 };

@@ -79,7 +79,7 @@ function App() {
   }
 
   return (
-    <main className="relative w-full h-screen bg-black overflow-hidden">
+    <main className={`relative w-full ${isAuthenticated ? 'h-screen overflow-hidden' : 'min-h-screen overflow-y-auto'} bg-black`}>
       <ThreeBackground />
       {isAuthenticated ? (
         <ChatPage />

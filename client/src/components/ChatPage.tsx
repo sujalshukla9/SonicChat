@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
     Send, Users, LogOut, Settings, Search,
     MessageCircle, MoreVertical, Smile,
-    Bell, Sun, X, UserPlus, Check, Clock, Edit3, Mic, UserMinus, Lock,
+    Bell, Sun, X, UserPlus, Check, Clock, Edit3, Mic, MicOff, UserMinus, Lock,
     Paperclip, Image, Video, FileText, File, Download, Trash2
 } from 'lucide-react';
 import { useAuthStore } from '../stores/authStore';
@@ -14,6 +14,7 @@ import { useSocket } from '../hooks/useSocket';
 import { useEncryption } from '../hooks/useEncryption';
 import { API_URL } from '../config/api';
 import EmojiPicker, { Theme } from 'emoji-picker-react';
+import { useVoiceRecorder } from '../hooks/useVoiceRecorder';
 
 export default function ChatPage() {
     const { user, isAuthenticated, logout, token, updateUsername, isLoading: authLoading, error: authError, clearError, syncUserWithBackend } = useAuthStore();
@@ -71,6 +72,16 @@ export default function ChatPage() {
     const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+    const {
+        isRecording,
+        audioBlob,
+        startRecording,
+        stopRecording,
+        cancelRecording,
+        formatTime: formatVoiceTime,
+        setAudioBlob
+    } = useVoiceRecorder();
+
     const username = user?.username || 'User';
     const userId = user?.id || '';
     const avatar = user?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${username}`;
@@ -104,6 +115,14 @@ export default function ChatPage() {
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages[currentRoom]]);
+
+    // Handle voice recording upload
+    useEffect(() => {
+        if (audioBlob && !isRecording) {
+            handleFileUpload(audioBlob, 'audio');
+            setAudioBlob(null);
+        }
+    }, [audioBlob, isRecording]);
 
     // Handle search with debounce
     const handleSearch = (query: string) => {
@@ -190,7 +209,7 @@ export default function ChatPage() {
     };
 
     // Handle file upload via Cloudinary
-    const handleFileUpload = async (file: File, type: 'image' | 'video' | 'document') => {
+    const handleFileUpload = async (file: File | Blob, type: 'image' | 'video' | 'document' | 'audio', fileName?: string) => {
         if (!selectedFriend || !user) return;
 
         // Check file size (100MB limit)
@@ -206,14 +225,18 @@ export default function ChatPage() {
 
         try {
             const formData = new FormData();
-            formData.append('file', file);
+            const extension = type === 'audio' ? (file.type.split('/')[1] || 'webm') : '';
+            const actualFileName = fileName || (file instanceof File ? (file as File).name : `recording_${Date.now()}.${extension}`);
+            formData.append('file', file, actualFileName);
 
-            // Determine endpoint based on file type
             let endpoint = `${API_URL}/api/media/upload/`;
+            console.log(`📤 Uploading ${type}:`, actualFileName, 'size:', file.size, 'type:', file.type);
             if (type === 'image') {
                 endpoint += 'image';
             } else if (type === 'video') {
                 endpoint += 'video';
+            } else if (type === 'audio') {
+                endpoint += 'audio';
             } else {
                 endpoint += 'document';
             }
@@ -223,7 +246,7 @@ export default function ChatPage() {
                 setUploadProgress(prev => Math.min(prev + 10, 85));
             }, 200);
 
-            console.log('📤 Uploading via Cloudinary:', file.name);
+            console.log('📤 Uploading via Cloudinary:', actualFileName);
 
             const response = await fetch(endpoint, {
                 method: 'POST',
@@ -248,7 +271,9 @@ export default function ChatPage() {
                 ? `📷 [Image] ${data.file.url}`
                 : type === 'video'
                     ? `🎬 [Video] ${data.file.url}`
-                    : `📎 [File] ${file.name} - ${data.file.url}`;
+                    : type === 'audio'
+                        ? `🎤 [Voice] ${data.file.url}`
+                        : `📎 [File] ${actualFileName} - ${data.file.url}`;
 
             sendPrivateMessage(selectedFriend._id, fileMessage);
 
@@ -1155,6 +1180,28 @@ export default function ChatPage() {
                                                                 );
                                                             }
 
+                                                            // Check if it's a voice message
+                                                            if (content.startsWith('🎤 [Voice]')) {
+                                                                const url = content.replace('🎤 [Voice] ', '').trim();
+                                                                return (
+                                                                    <div className="space-y-2 min-w-[200px]">
+                                                                        <div className="flex items-center gap-3">
+                                                                            <div className={`w-8 h-8 rounded-full ${isOwn ? 'bg-white/20' : 'bg-purple-500/20'} flex items-center justify-center shrink-0`}>
+                                                                                <Mic size={16} className={isOwn ? 'text-white' : 'text-purple-400'} />
+                                                                            </div>
+                                                                            <audio
+                                                                                src={url}
+                                                                                controls
+                                                                                className={`h-8 w-full max-w-[200px] ${isOwn ? 'brightness-200' : ''}`}
+                                                                            />
+                                                                        </div>
+                                                                        <div className={`text-[10px] ${isOwn ? 'text-white/60' : 'text-gray-500'} ml-11`}>
+                                                                            Voice message
+                                                                        </div>
+                                                                    </div>
+                                                                );
+                                                            }
+
                                                             // Check if it's a video message
                                                             if (content.startsWith('🎬 [Video]')) {
                                                                 const url = content.replace('🎬 [Video] ', '').trim();
@@ -1246,9 +1293,31 @@ export default function ChatPage() {
                 {selectedFriend && (
                     <div className="p-3 md:p-6 pt-0 md:pt-2">
                         <div className="p-1.5 md:p-2 rounded-2xl flex items-end gap-1 md:gap-2 relative bg-black/40 backdrop-blur-xl shadow-2xl">
-                            {/* Typing users overlay */}
+                            {/* Typing users and Recording overlay */}
                             <AnimatePresence>
-                                {roomTypingUsers.length > 0 && (
+                                {isRecording ? (
+                                    <motion.div
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: 10 }}
+                                        className="absolute bottom-full left-4 mb-2 flex items-center gap-3 text-red-500 text-xs font-bold px-4 py-2 rounded-full bg-red-500/10 backdrop-blur-md border border-red-500/20 shadow-lg shadow-red-500/10"
+                                    >
+                                        <div className="flex gap-1 h-3 items-center">
+                                            <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                                        </div>
+                                        <span className="tracking-wider uppercase">Recording {formatVoiceTime()}</span>
+                                        <div className="flex gap-0.5 items-center h-4">
+                                            {[1, 2, 3, 4, 3, 2, 1].map((h, i) => (
+                                                <motion.div
+                                                    key={i}
+                                                    animate={{ height: [4, h * 4, 4] }}
+                                                    transition={{ repeat: Infinity, duration: 0.5, delay: i * 0.1 }}
+                                                    className="w-0.5 bg-red-500 rounded-full"
+                                                />
+                                            ))}
+                                        </div>
+                                    </motion.div>
+                                ) : roomTypingUsers.length > 0 && (
                                     <motion.div
                                         initial={{ opacity: 0, y: 10 }}
                                         animate={{ opacity: 1, y: 0 }}
@@ -1423,11 +1492,33 @@ export default function ChatPage() {
                                     >
                                         <Send size={18} className="ml-0.5" />
                                     </button>
+                                ) : isRecording ? (
+                                    <div className="flex items-center gap-1">
+                                        <button
+                                            type="button"
+                                            onClick={cancelRecording}
+                                            className="p-2.5 bg-red-500/10 text-red-500 rounded-xl hover:bg-red-500/20 transition-all"
+                                        >
+                                            <X size={18} />
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={async () => {
+                                                stopRecording();
+                                                // The audioBlob will be set in the stopRecording callback,
+                                                // so we need an effect or manual trigger to upload it.
+                                            }}
+                                            className="p-2.5 bg-linear-to-r from-red-600 to-pink-600 text-white rounded-xl animate-pulse shadow-lg shadow-red-500/20"
+                                        >
+                                            <MicOff size={18} />
+                                        </button>
+                                    </div>
                                 ) : (
                                     <button
                                         type="button"
+                                        onClick={startRecording}
                                         className="p-2.5 bg-linear-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:opacity-90 transition-all transform active:scale-95 shadow-lg shadow-purple-500/20"
-                                        title="Voice Message (Coming Soon)"
+                                        title="Send Voice Message"
                                     >
                                         <Mic size={18} />
                                     </button>

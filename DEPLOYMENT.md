@@ -61,6 +61,12 @@ Your backend URL will be: `https://your-app-name.onrender.com`
 |----------|-------|
 | `VITE_API_URL` | `https://your-backend.onrender.com` |
 | `VITE_SOCKET_URL` | `https://your-backend.onrender.com` |
+| `VITE_FIREBASE_API_KEY` | `your-firebase-api-key` |
+| `VITE_FIREBASE_AUTH_DOMAIN` | `your-project.firebaseapp.com` |
+| `VITE_FIREBASE_PROJECT_ID` | `your-firebase-project-id` |
+| `VITE_FIREBASE_STORAGE_BUCKET` | `your-project.appspot.com` |
+| `VITE_FIREBASE_MESSAGING_SENDER_ID` | `your-messaging-sender-id` |
+| `VITE_FIREBASE_APP_ID` | `your-firebase-app-id` |
 
 ### Step 5: Deploy
 Click **"Deploy"** and wait for the build to complete.

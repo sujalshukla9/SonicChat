@@ -147,14 +147,14 @@ export default function AuthPage() {
                             </div>
 
                             {/* Form */}
-                            <form onSubmit={handleSubmit} className="space-y-4">
+                            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                                 {/* Error Message */}
-                                <AnimatePresence mode="popLayout" initial={false}>
+                                <AnimatePresence>
                                     {error && (
                                         <motion.div
-                                            initial={{ opacity: 0, height: 0 }}
-                                            animate={{ opacity: 1, height: 'auto' }}
-                                            exit={{ opacity: 0, height: 0 }}
+                                            initial={{ opacity: 0, height: 0, marginBottom: 0 }}
+                                            animate={{ opacity: 1, height: 'auto', marginBottom: 16 }}
+                                            exit={{ opacity: 0, height: 0, marginBottom: 0 }}
                                             className="bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2.5 flex items-start gap-2 text-red-400 text-xs sm:text-sm overflow-hidden"
                                         >
                                             <Sparkles className="w-4 h-4 mt-0.5 shrink-0" />
@@ -163,117 +163,122 @@ export default function AuthPage() {
                                     )}
                                 </AnimatePresence>
 
-                                {/* Sign Up Fields */}
-                                <AnimatePresence mode="popLayout" initial={false}>
-                                    {!isLogin && (
-                                        <motion.div
-                                            initial={{ opacity: 0, height: 0 }}
-                                            animate={{ opacity: 1, height: 'auto' }}
-                                            exit={{ opacity: 0, height: 0 }}
-                                            className="space-y-4 overflow-hidden"
-                                        >
-                                            {/* Username */}
-                                            <div>
-                                                <label className="block text-xs font-medium text-gray-400 mb-1.5 ml-0.5 uppercase tracking-wider">Username</label>
-                                                <div className="relative group">
-                                                    <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-cyan-400 transition-colors" />
-                                                    <input
-                                                        type="text"
-                                                        name="username"
-                                                        value={formData.username}
-                                                        onChange={handleChange}
-                                                        className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/30 transition-all"
-                                                        placeholder="Choose a username"
-                                                        required={!isLogin}
-                                                    />
+                                <motion.div layout className="flex flex-col gap-4">
+
+                                    {/* Sign Up Fields */}
+                                    <AnimatePresence initial={false}>
+                                        {!isLogin && (
+                                            <motion.div
+                                                key="signup-extras"
+                                                initial={{ opacity: 0, height: 0 }}
+                                                animate={{ opacity: 1, height: 'auto' }}
+                                                exit={{ opacity: 0, height: 0 }}
+                                                className="flex flex-col gap-4 overflow-hidden"
+                                            >
+                                                {/* Username */}
+                                                <div>
+                                                    <label className="block text-xs font-medium text-gray-400 mb-1.5 ml-0.5 uppercase tracking-wider">Username</label>
+                                                    <div className="relative group">
+                                                        <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-cyan-400 transition-colors" />
+                                                        <input
+                                                            type="text"
+                                                            name="username"
+                                                            value={formData.username}
+                                                            onChange={handleChange}
+                                                            className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/30 transition-all"
+                                                            placeholder="Choose a username"
+                                                            required={!isLogin}
+                                                        />
+                                                    </div>
                                                 </div>
-                                            </div>
 
-                                            {/* Gender */}
-                                            <div>
-                                                <label className="block text-xs font-medium text-gray-400 mb-1.5 ml-0.5 uppercase tracking-wider">Gender</label>
-                                                <div className="flex gap-3">
-                                                    {(['male', 'female'] as const).map((g) => (
-                                                        <button
-                                                            key={g}
-                                                            type="button"
-                                                            onClick={() => setGender(g)}
-                                                            className={`flex-1 py-2.5 rounded-xl border transition-all flex items-center justify-center gap-2 text-sm font-medium ${gender === g
-                                                                ? g === 'male'
-                                                                    ? 'bg-blue-500/15 border-blue-500/40 text-blue-400'
-                                                                    : 'bg-pink-500/15 border-pink-500/40 text-pink-400'
-                                                                : 'bg-white/5 border-white/10 text-gray-500 hover:bg-white/10'
-                                                                }`}
-                                                        >
-                                                            <span>{g === 'male' ? '👨' : '👩'}</span>
-                                                            <span className="capitalize">{g}</span>
-                                                        </button>
-                                                    ))}
+                                                {/* Gender */}
+                                                <div className="pb-1">
+                                                    <label className="block text-xs font-medium text-gray-400 mb-1.5 ml-0.5 uppercase tracking-wider">Gender</label>
+                                                    <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                                                        {(['male', 'female'] as const).map((g) => (
+                                                            <button
+                                                                key={g}
+                                                                type="button"
+                                                                onClick={() => setGender(g)}
+                                                                className={`py-2 rounded-xl border transition-all flex items-center justify-center gap-1.5 sm:gap-2 text-[13px] sm:text-sm font-medium ${gender === g
+                                                                    ? g === 'male'
+                                                                        ? 'bg-blue-500/15 border-blue-500/40 text-blue-400'
+                                                                        : 'bg-pink-500/15 border-pink-500/40 text-pink-400'
+                                                                    : 'bg-white/5 border-white/10 text-gray-500 hover:bg-white/10'
+                                                                    }`}
+                                                            >
+                                                                <span>{g === 'male' ? '👨' : '👩'}</span>
+                                                                <span className="capitalize">{g}</span>
+                                                            </button>
+                                                        ))}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
 
-                                {/* Email */}
-                                <div>
-                                    <label className="block text-xs font-medium text-gray-400 mb-1.5 ml-0.5 uppercase tracking-wider">Email</label>
-                                    <div className="relative group">
-                                        <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-cyan-400 transition-colors" />
-                                        <input
-                                            type="email"
-                                            name="email"
-                                            value={formData.email}
-                                            onChange={handleChange}
-                                            className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/30 transition-all"
-                                            placeholder="name@example.com"
-                                            required
-                                        />
-                                    </div>
-                                </div>
+                                    {/* Email */}
+                                    <motion.div layout>
+                                        <label className="block text-xs font-medium text-gray-400 mb-1.5 ml-0.5 uppercase tracking-wider">Email</label>
+                                        <div className="relative group">
+                                            <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-cyan-400 transition-colors" />
+                                            <input
+                                                type="email"
+                                                name="email"
+                                                value={formData.email}
+                                                onChange={handleChange}
+                                                className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/30 transition-all"
+                                                placeholder="name@example.com"
+                                                required
+                                            />
+                                        </div>
+                                    </motion.div>
 
-                                {/* Password */}
-                                <div>
-                                    <label className="block text-xs font-medium text-gray-400 mb-1.5 ml-0.5 uppercase tracking-wider">Password</label>
-                                    <div className="relative group">
-                                        <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-cyan-400 transition-colors" />
-                                        <input
-                                            type={showPassword ? 'text' : 'password'}
-                                            name="password"
-                                            value={formData.password}
-                                            onChange={handleChange}
-                                            className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-10 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/30 transition-all"
-                                            placeholder="••••••••"
-                                            required
-                                            minLength={6}
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => setShowPassword(!showPassword)}
-                                            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
-                                        >
-                                            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                                        </button>
-                                    </div>
-                                </div>
+                                    {/* Password */}
+                                    <motion.div layout>
+                                        <label className="block text-xs font-medium text-gray-400 mb-1.5 ml-0.5 uppercase tracking-wider">Password</label>
+                                        <div className="relative group">
+                                            <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-cyan-400 transition-colors" />
+                                            <input
+                                                type={showPassword ? 'text' : 'password'}
+                                                name="password"
+                                                value={formData.password}
+                                                onChange={handleChange}
+                                                className="w-full bg-white/5 border border-white/10 rounded-xl pl-10 pr-10 py-3 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-cyan-500/50 focus:ring-1 focus:ring-cyan-500/30 transition-all"
+                                                placeholder="••••••••"
+                                                required
+                                                minLength={6}
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
+                                            >
+                                                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                            </button>
+                                        </div>
+                                    </motion.div>
 
-                                {/* Submit Button */}
-                                <motion.button
-                                    whileHover={{ scale: 1.01 }}
-                                    whileTap={{ scale: 0.99 }}
-                                    type="submit"
-                                    disabled={isLoading}
-                                    className="w-full py-3 bg-linear-to-r from-cyan-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 rounded-xl font-bold text-sm text-white shadow-lg shadow-purple-500/25 transition-all flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed mt-1"
-                                >
-                                    {isLoading ? (
-                                        <Loader2 className="w-4 h-4 animate-spin" />
-                                    ) : (
-                                        <>
-                                            <span>{isLogin ? 'Sign In' : 'Create Account'}</span>
-                                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                                        </>
-                                    )}
-                                </motion.button>
+                                    {/* Submit Button */}
+                                    <motion.button
+                                        layout
+                                        whileHover={{ scale: 1.01 }}
+                                        whileTap={{ scale: 0.99 }}
+                                        type="submit"
+                                        disabled={isLoading}
+                                        className="w-full py-3 bg-linear-to-r from-cyan-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 rounded-xl font-bold text-sm text-white shadow-lg shadow-purple-500/25 transition-all flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed mt-1"
+                                    >
+                                        {isLoading ? (
+                                            <Loader2 className="w-4 h-4 animate-spin" />
+                                        ) : (
+                                            <>
+                                                <span>{isLogin ? 'Sign In' : 'Create Account'}</span>
+                                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                            </>
+                                        )}
+                                    </motion.button>
+                                </motion.div>
                             </form>
 
                             {/* Divider */}

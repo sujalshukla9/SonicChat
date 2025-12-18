@@ -49,7 +49,7 @@ class CloudinaryService {
         fileBuffer: Buffer,
         fileName: string,
         mimeType: string,
-        type: 'image' | 'video' | 'document'
+        type: 'image' | 'video' | 'audio' | 'document'
     ): Promise<UploadResult> {
         if (!this.isReady()) {
             return {
@@ -77,6 +77,12 @@ class CloudinaryService {
                     maxSize = cloudinaryConfig.maxVideoSize;
                     resourceType = 'video';
                     folder = cloudinaryConfig.folders.videos;
+                    break;
+                case 'audio':
+                    allowedTypes = cloudinaryConfig.allowedVideoTypes; // Re-use video types list or separate them if preferred
+                    maxSize = cloudinaryConfig.maxVideoSize;
+                    resourceType = 'video'; // Cloudinary uses 'video' for audio files
+                    folder = cloudinaryConfig.folders.audio;
                     break;
                 case 'document':
                     allowedTypes = cloudinaryConfig.allowedDocumentTypes;

@@ -123,6 +123,52 @@ router.post('/upload/video', upload.single('file'), async (req, res) => {
 });
 
 /**
+ * @route   POST /api/media/upload/audio
+ * @desc    Upload an audio file to Cloudinary
+ */
+router.post('/upload/audio', upload.single('file'), async (req, res) => {
+    try {
+        if (!req.file) {
+            res.status(400).json({ error: 'No file provided' });
+            return;
+        }
+
+        if (!cloudinaryService.isReady()) {
+            res.status(503).json({
+                error: 'Cloudinary service is not available',
+                message: 'Please configure Cloudinary credentials in environment variables'
+            });
+            return;
+        }
+
+        const result = await cloudinaryService.uploadFile(
+            req.file.buffer,
+            req.file.originalname,
+            req.file.mimetype,
+            'audio'
+        );
+
+        if (!result.success) {
+            res.status(400).json({ error: result.error });
+            return;
+        }
+
+        res.status(201).json({
+            message: 'Audio uploaded successfully',
+            file: {
+                url: result.url,
+                publicId: result.publicId,
+                format: result.format,
+                size: result.bytes,
+            }
+        });
+    } catch (error: any) {
+        console.error('Error uploading audio:', error);
+        res.status(500).json({ error: error.message || 'Failed to upload audio' });
+    }
+});
+
+/**
  * @route   POST /api/media/upload/document
  * @desc    Upload a document to Cloudinary
  */
