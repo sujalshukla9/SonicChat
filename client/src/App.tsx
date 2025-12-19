@@ -28,9 +28,9 @@ function App() {
 
   if (isLoading) {
     return (
-      <main className="relative w-full h-screen bg-black flex items-center justify-center overflow-hidden">
+      <main className="relative w-full h-dvh bg-black flex items-center justify-center overflow-hidden">
         <ThreeBackground />
-        <div className="relative z-20 flex flex-col items-center gap-6">
+        <div className="relative z-20 flex flex-col items-center gap-4 sm:gap-6 px-4">
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -49,9 +49,9 @@ function App() {
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
-              className="w-24 h-24 rounded-3xl bg-linear-to-br from-cyan-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-2xl shadow-purple-500/30"
+              className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-2xl sm:rounded-3xl bg-linear-to-br from-cyan-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-2xl shadow-purple-500/30"
             >
-              <MessageCircle className="w-12 h-12 text-white fill-white/20 animate-pulse" />
+              <MessageCircle className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-white fill-white/20 animate-pulse" />
             </motion.div>
           </motion.div>
 
@@ -61,10 +61,10 @@ function App() {
             transition={{ delay: 0.2 }}
             className="flex flex-col items-center gap-2"
           >
-            <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-linear-to-r from-cyan-200 via-purple-200 to-pink-200 tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-bold text-transparent bg-clip-text bg-linear-to-r from-cyan-200 via-purple-200 to-pink-200 tracking-tight">
               SonicChat
             </h1>
-            <div className="h-1 w-32 bg-gray-800 rounded-full overflow-hidden">
+            <div className="h-1 w-24 sm:w-32 bg-gray-800 rounded-full overflow-hidden">
               <motion.div
                 className="h-full bg-linear-to-r from-cyan-500 to-purple-500"
                 initial={{ x: "-100%" }}

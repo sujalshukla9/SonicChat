@@ -909,7 +909,7 @@ export default function ChatPage() {
             {/* Main Chat Area */}
             <main className={`flex-1 flex flex-col min-w-0 bg-transparent h-full ${selectedFriend ? 'flex' : 'hidden md:flex'}`}>
                 {/* Header */}
-                <header className="h-[60px] md:h-[72px] px-3 md:px-4 flex items-center justify-between border-b border-white/5 bg-[#0f0f13] backdrop-blur-xl z-30 shrink-0 relative pt-[env(safe-area-inset-top)]">
+                <header className="h-[56px] sm:h-[60px] md:h-[72px] px-2 sm:px-3 md:px-4 flex items-center justify-between border-b border-white/5 bg-[#0f0f13] backdrop-blur-xl z-30 shrink-0 relative pt-[env(safe-area-inset-top)]">
                     <div className="flex items-center gap-2 md:gap-4 min-w-0 flex-1">
                         {selectedFriend ? (
                             <>
@@ -992,9 +992,9 @@ export default function ChatPage() {
                                 {showChatSearch && (
                                     <motion.div
                                         initial={{ width: 0, opacity: 0 }}
-                                        animate={{ width: 200, opacity: 1 }}
+                                        animate={{ width: 'min(200px, calc(100vw - 200px))' as any, opacity: 1 }}
                                         exit={{ width: 0, opacity: 0 }}
-                                        className="overflow-hidden"
+                                        className="overflow-hidden hidden xs:block"
                                     >
                                         <input
                                             type="text"
@@ -1120,7 +1120,7 @@ export default function ChatPage() {
                                             layout
                                             className={`flex ${isOwn ? 'justify-end' : 'justify-start'} group ${isConsecutive ? 'mt-0.5' : 'mt-4 md:mt-6'}`}
                                         >
-                                            <div className={`flex gap-2 md:gap-3 max-w-[90%] md:max-w-[70%] ${isOwn ? 'flex-row-reverse' : ''}`}>
+                                            <div className={`flex gap-1.5 sm:gap-2 md:gap-3 max-w-[85%] sm:max-w-[80%] md:max-w-[70%] ${isOwn ? 'flex-row-reverse' : ''}`}>
                                                 {!isOwn && (
                                                     <div className="w-8 shrink-0 flex flex-col items-center">
                                                         {showAvatar ? (
@@ -1146,7 +1146,7 @@ export default function ChatPage() {
                                                     )}
 
                                                     <div
-                                                        className={`px-3 md:px-5 py-2 md:py-3 rounded-2xl relative shadow-md transition-all ${isOwn
+                                                        className={`px-2.5 sm:px-3 md:px-5 py-2 md:py-3 rounded-2xl relative shadow-md transition-all ${isOwn
                                                             ? 'bg-linear-to-br from-cyan-600 to-blue-600 text-white rounded-tr-sm hover:shadow-cyan-500/10'
                                                             : 'glass-panel-light text-gray-200 rounded-tl-sm hover:bg-white/5'
                                                             }`}
@@ -1257,7 +1257,7 @@ export default function ChatPage() {
 
                                                             // Regular text message
                                                             return (
-                                                                <p className="text-[15px] leading-relaxed whitespace-pre-wrap break-all">
+                                                                <p className="text-[13px] sm:text-[15px] leading-relaxed whitespace-pre-wrap break-all">
                                                                     {content}
                                                                 </p>
                                                             );
@@ -1296,244 +1296,246 @@ export default function ChatPage() {
                 </div>
 
                 {/* Input Area */}
-                {selectedFriend && (
-                    <div className="p-3 md:p-6 pt-0 md:pt-2">
-                        <div className="p-1.5 md:p-2 rounded-2xl flex items-end gap-1 md:gap-2 relative bg-black/40 backdrop-blur-xl shadow-2xl">
-                            {/* Typing users and Recording overlay */}
-                            <AnimatePresence>
-                                {isRecording ? (
-                                    <motion.div
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: 10 }}
-                                        className="absolute bottom-full left-4 mb-2 flex items-center gap-3 text-red-500 text-xs font-bold px-4 py-2 rounded-full bg-red-500/10 backdrop-blur-md border border-red-500/20 shadow-lg shadow-red-500/10"
-                                    >
-                                        <div className="flex gap-1 h-3 items-center">
-                                            <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                                        </div>
-                                        <span className="tracking-wider uppercase">Recording {formatVoiceTime()}</span>
-                                        <div className="flex gap-0.5 items-center h-4">
-                                            {[1, 2, 3, 4, 3, 2, 1].map((h, i) => (
-                                                <motion.div
-                                                    key={i}
-                                                    animate={{ height: [4, h * 4, 4] }}
-                                                    transition={{ repeat: Infinity, duration: 0.5, delay: i * 0.1 }}
-                                                    className="w-0.5 bg-red-500 rounded-full"
-                                                />
-                                            ))}
-                                        </div>
-                                    </motion.div>
-                                ) : roomTypingUsers.length > 0 && (
-                                    <motion.div
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: 10 }}
-                                        className="absolute bottom-full left-4 mb-2 flex items-center gap-2 text-gray-400 text-xs font-medium px-3 py-1.5 rounded-full bg-black/70 backdrop-blur-md"
-                                    >
-                                        <div className="flex gap-1 h-3 items-center">
-                                            <span className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                                            <span className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                                            <span className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-                                        </div>
-                                        <span>
-                                            {selectedFriend.username} is typing...
-                                        </span>
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-
-                            <div className="flex-1 relative">
-                                <textarea
-                                    value={currentMessage}
-                                    onChange={(e) => {
-                                        setCurrentMessage(e.target.value);
-                                        handleTyping();
-                                    }}
-                                    onKeyDown={(e) => {
-                                        if (e.key === 'Enter' && !e.shiftKey) {
-                                            e.preventDefault();
-                                            handleSendMessage();
-                                        }
-                                    }}
-                                    rows={1}
-                                    placeholder={`Message ${selectedFriend.username}...`}
-                                    className="w-full bg-transparent border-none text-white placeholder-gray-500 focus:ring-0 focus:outline-none resize-none py-2.5 md:py-3 px-3 md:px-4 min-h-[40px] md:min-h-[44px] max-h-[120px] scrollbar-hide text-sm md:text-[15px]"
-                                    style={{ height: 'auto', minHeight: '40px' }}
-                                />
-                            </div>
-
-                            <div className="flex items-center gap-1 shrink-0 pb-1.5 relative">
-                                {/* Hidden File Input */}
-                                <input
-                                    ref={fileInputRef}
-                                    type="file"
-                                    className="hidden"
-                                    onChange={(e) => {
-                                        const type = fileInputRef.current?.getAttribute('data-type') as 'image' | 'video' | 'document' || 'document';
-                                        handleFileInputChange(e, type);
-                                    }}
-                                />
-
-                                {/* Upload Progress Overlay */}
+                {
+                    selectedFriend && (
+                        <div className="p-2 sm:p-3 md:p-6 pt-0 md:pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+                            <div className="p-1 sm:p-1.5 md:p-2 rounded-xl sm:rounded-2xl flex items-end gap-1 md:gap-2 relative bg-black/40 backdrop-blur-xl shadow-2xl">
+                                {/* Typing users and Recording overlay */}
                                 <AnimatePresence>
-                                    {isUploading && (
+                                    {isRecording ? (
                                         <motion.div
-                                            initial={{ opacity: 0 }}
-                                            animate={{ opacity: 1 }}
-                                            exit={{ opacity: 0 }}
-                                            className="absolute bottom-full left-0 right-0 mb-2 bg-black/80 backdrop-blur-sm rounded-xl p-3"
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: 10 }}
+                                            className="absolute bottom-full left-4 mb-2 flex items-center gap-3 text-red-500 text-xs font-bold px-4 py-2 rounded-full bg-red-500/10 backdrop-blur-md border border-red-500/20 shadow-lg shadow-red-500/10"
                                         >
-                                            <div className="flex items-center gap-3">
-                                                <div className="flex-1">
-                                                    <div className="flex items-center justify-between text-xs text-gray-400 mb-1">
-                                                        <span>Uploading...</span>
-                                                        <span>{uploadProgress}%</span>
-                                                    </div>
-                                                    <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
-                                                        <motion.div
-                                                            className="h-full bg-linear-to-r from-cyan-500 to-purple-500 rounded-full"
-                                                            initial={{ width: 0 }}
-                                                            animate={{ width: `${uploadProgress}%` }}
-                                                        />
+                                            <div className="flex gap-1 h-3 items-center">
+                                                <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                                            </div>
+                                            <span className="tracking-wider uppercase">Recording {formatVoiceTime()}</span>
+                                            <div className="flex gap-0.5 items-center h-4">
+                                                {[1, 2, 3, 4, 3, 2, 1].map((h, i) => (
+                                                    <motion.div
+                                                        key={i}
+                                                        animate={{ height: [4, h * 4, 4] }}
+                                                        transition={{ repeat: Infinity, duration: 0.5, delay: i * 0.1 }}
+                                                        className="w-0.5 bg-red-500 rounded-full"
+                                                    />
+                                                ))}
+                                            </div>
+                                        </motion.div>
+                                    ) : roomTypingUsers.length > 0 && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: 10 }}
+                                            className="absolute bottom-full left-4 mb-2 flex items-center gap-2 text-gray-400 text-xs font-medium px-3 py-1.5 rounded-full bg-black/70 backdrop-blur-md"
+                                        >
+                                            <div className="flex gap-1 h-3 items-center">
+                                                <span className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                                                <span className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                                                <span className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                                            </div>
+                                            <span>
+                                                {selectedFriend.username} is typing...
+                                            </span>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+
+                                <div className="flex-1 relative">
+                                    <textarea
+                                        value={currentMessage}
+                                        onChange={(e) => {
+                                            setCurrentMessage(e.target.value);
+                                            handleTyping();
+                                        }}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter' && !e.shiftKey) {
+                                                e.preventDefault();
+                                                handleSendMessage();
+                                            }
+                                        }}
+                                        rows={1}
+                                        placeholder={`Message ${selectedFriend.username}...`}
+                                        className="w-full bg-transparent border-none text-white placeholder-gray-500 focus:ring-0 focus:outline-none resize-none py-2 sm:py-2.5 md:py-3 px-2 sm:px-3 md:px-4 min-h-[36px] sm:min-h-[40px] md:min-h-[44px] max-h-[100px] sm:max-h-[120px] scrollbar-hide text-[13px] sm:text-sm md:text-[15px]"
+                                        style={{ height: 'auto', minHeight: '36px' }}
+                                    />
+                                </div>
+
+                                <div className="flex items-center gap-1 shrink-0 pb-1.5 relative">
+                                    {/* Hidden File Input */}
+                                    <input
+                                        ref={fileInputRef}
+                                        type="file"
+                                        className="hidden"
+                                        onChange={(e) => {
+                                            const type = fileInputRef.current?.getAttribute('data-type') as 'image' | 'video' | 'document' || 'document';
+                                            handleFileInputChange(e, type);
+                                        }}
+                                    />
+
+                                    {/* Upload Progress Overlay */}
+                                    <AnimatePresence>
+                                        {isUploading && (
+                                            <motion.div
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                exit={{ opacity: 0 }}
+                                                className="absolute bottom-full left-0 right-0 mb-2 bg-black/80 backdrop-blur-sm rounded-xl p-3"
+                                            >
+                                                <div className="flex items-center gap-3">
+                                                    <div className="flex-1">
+                                                        <div className="flex items-center justify-between text-xs text-gray-400 mb-1">
+                                                            <span>Uploading...</span>
+                                                            <span>{uploadProgress}%</span>
+                                                        </div>
+                                                        <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                                                            <motion.div
+                                                                className="h-full bg-linear-to-r from-cyan-500 to-purple-500 rounded-full"
+                                                                initial={{ width: 0 }}
+                                                                animate={{ width: `${uploadProgress}%` }}
+                                                            />
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
 
-                                {/* Attachment Menu */}
-                                <AnimatePresence>
-                                    {showAttachmentMenu && (
-                                        <motion.div
-                                            initial={{ opacity: 0, scale: 0.9, y: 10 }}
-                                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                                            exit={{ opacity: 0, scale: 0.9, y: 10 }}
-                                            className="absolute bottom-full left-0 mb-2 z-50 glass-panel rounded-xl shadow-2xl overflow-hidden"
-                                        >
-                                            <div className="p-2 space-y-1 min-w-[180px]">
-                                                <button
-                                                    onClick={() => triggerFileInput('image/*', 'image')}
-                                                    className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-gray-300 hover:bg-white/10 rounded-lg transition-colors"
-                                                >
-                                                    <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center">
-                                                        <Image size={16} className="text-green-400" />
-                                                    </div>
-                                                    <span>Image</span>
-                                                </button>
-                                                <button
-                                                    onClick={() => triggerFileInput('video/*', 'video')}
-                                                    className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-gray-300 hover:bg-white/10 rounded-lg transition-colors"
-                                                >
-                                                    <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
-                                                        <Video size={16} className="text-purple-400" />
-                                                    </div>
-                                                    <span>Video</span>
-                                                </button>
-                                                <button
-                                                    onClick={() => triggerFileInput('.pdf,.doc,.docx,.txt,.zip,.rar', 'document')}
-                                                    className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-gray-300 hover:bg-white/10 rounded-lg transition-colors"
-                                                >
-                                                    <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
-                                                        <FileText size={16} className="text-blue-400" />
-                                                    </div>
-                                                    <span>Document</span>
-                                                </button>
-                                            </div>
-                                            <div className="px-3 py-2 border-t border-white/5">
-                                                <p className="text-[10px] text-gray-500">Max file size: 100MB</p>
-                                            </div>
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
+                                    {/* Attachment Menu */}
+                                    <AnimatePresence>
+                                        {showAttachmentMenu && (
+                                            <motion.div
+                                                initial={{ opacity: 0, scale: 0.9, y: 10 }}
+                                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                                exit={{ opacity: 0, scale: 0.9, y: 10 }}
+                                                className="absolute bottom-full left-0 mb-2 z-50 glass-panel rounded-xl shadow-2xl overflow-hidden max-w-[calc(100vw-32px)] sm:max-w-none"
+                                            >
+                                                <div className="p-1.5 sm:p-2 space-y-1 min-w-[160px] sm:min-w-[180px]">
+                                                    <button
+                                                        onClick={() => triggerFileInput('image/*', 'image')}
+                                                        className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-gray-300 hover:bg-white/10 rounded-lg transition-colors"
+                                                    >
+                                                        <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center">
+                                                            <Image size={16} className="text-green-400" />
+                                                        </div>
+                                                        <span>Image</span>
+                                                    </button>
+                                                    <button
+                                                        onClick={() => triggerFileInput('video/*', 'video')}
+                                                        className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-gray-300 hover:bg-white/10 rounded-lg transition-colors"
+                                                    >
+                                                        <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                                                            <Video size={16} className="text-purple-400" />
+                                                        </div>
+                                                        <span>Video</span>
+                                                    </button>
+                                                    <button
+                                                        onClick={() => triggerFileInput('.pdf,.doc,.docx,.txt,.zip,.rar', 'document')}
+                                                        className="w-full flex items-center gap-3 px-3 py-2.5 text-sm text-gray-300 hover:bg-white/10 rounded-lg transition-colors"
+                                                    >
+                                                        <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center">
+                                                            <FileText size={16} className="text-blue-400" />
+                                                        </div>
+                                                        <span>Document</span>
+                                                    </button>
+                                                </div>
+                                                <div className="px-3 py-2 border-t border-white/5">
+                                                    <p className="text-[10px] text-gray-500">Max file size: 100MB</p>
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
 
-                                {/* Attachment Button */}
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        setShowAttachmentMenu(!showAttachmentMenu);
-                                        setShowEmojiPicker(false);
-                                    }}
-                                    disabled={isUploading}
-                                    className={`p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors ${showAttachmentMenu ? 'text-purple-400 bg-white/5' : ''} ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                >
-                                    <Paperclip size={20} />
-                                </button>
-
-                                {/* Emoji Picker */}
-                                <AnimatePresence>
-                                    {showEmojiPicker && (
-                                        <motion.div
-                                            initial={{ opacity: 0, scale: 0.9, y: 10 }}
-                                            animate={{ opacity: 1, scale: 1, y: 0 }}
-                                            exit={{ opacity: 0, scale: 0.9, y: 10 }}
-                                            className="absolute bottom-full right-0 mb-2 z-50 w-[280px] xs:w-[320px]"
-                                        >
-                                            <EmojiPicker
-                                                theme={Theme.DARK}
-                                                onEmojiClick={(emojiData) => {
-                                                    setCurrentMessage(prev => prev + emojiData.emoji);
-                                                    setShowEmojiPicker(false);
-                                                }}
-                                                width="100%"
-                                                height={350}
-                                            />
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        setShowEmojiPicker(!showEmojiPicker);
-                                        setShowAttachmentMenu(false);
-                                    }}
-                                    className={`p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors ${showEmojiPicker ? 'text-yellow-400' : ''}`}
-                                >
-                                    <Smile size={20} />
-                                </button>
-                                {currentMessage.trim() ? (
-                                    <button
-                                        onClick={() => handleSendMessage()}
-                                        className="p-2.5 bg-white text-black rounded-xl hover:bg-gray-200 transition-all transform active:scale-95 shadow-lg shadow-white/5"
-                                    >
-                                        <Send size={18} className="ml-0.5" />
-                                    </button>
-                                ) : isRecording ? (
-                                    <div className="flex items-center gap-1">
-                                        <button
-                                            type="button"
-                                            onClick={cancelRecording}
-                                            className="p-2.5 bg-red-500/10 text-red-500 rounded-xl hover:bg-red-500/20 transition-all"
-                                        >
-                                            <X size={18} />
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={async () => {
-                                                stopRecording();
-                                                // The audioBlob will be set in the stopRecording callback,
-                                                // so we need an effect or manual trigger to upload it.
-                                            }}
-                                            className="p-2.5 bg-linear-to-r from-red-600 to-pink-600 text-white rounded-xl animate-pulse shadow-lg shadow-red-500/20"
-                                        >
-                                            <MicOff size={18} />
-                                        </button>
-                                    </div>
-                                ) : (
+                                    {/* Attachment Button */}
                                     <button
                                         type="button"
-                                        onClick={startRecording}
-                                        className="p-2.5 bg-linear-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:opacity-90 transition-all transform active:scale-95 shadow-lg shadow-purple-500/20"
-                                        title="Send Voice Message"
+                                        onClick={() => {
+                                            setShowAttachmentMenu(!showAttachmentMenu);
+                                            setShowEmojiPicker(false);
+                                        }}
+                                        disabled={isUploading}
+                                        className={`p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors ${showAttachmentMenu ? 'text-purple-400 bg-white/5' : ''} ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
                                     >
-                                        <Mic size={18} />
+                                        <Paperclip size={20} />
                                     </button>
-                                )}
+
+                                    {/* Emoji Picker */}
+                                    <AnimatePresence>
+                                        {showEmojiPicker && (
+                                            <motion.div
+                                                initial={{ opacity: 0, scale: 0.9, y: 10 }}
+                                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                                exit={{ opacity: 0, scale: 0.9, y: 10 }}
+                                                className="absolute bottom-full right-0 mb-2 z-50 w-[260px] xs:w-[280px] sm:w-[320px]"
+                                            >
+                                                <EmojiPicker
+                                                    theme={Theme.DARK}
+                                                    onEmojiClick={(emojiData) => {
+                                                        setCurrentMessage(prev => prev + emojiData.emoji);
+                                                        setShowEmojiPicker(false);
+                                                    }}
+                                                    width="100%"
+                                                    height={350}
+                                                />
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setShowEmojiPicker(!showEmojiPicker);
+                                            setShowAttachmentMenu(false);
+                                        }}
+                                        className={`p-2 text-gray-400 hover:text-white hover:bg-white/5 rounded-lg transition-colors ${showEmojiPicker ? 'text-yellow-400' : ''}`}
+                                    >
+                                        <Smile size={20} />
+                                    </button>
+                                    {currentMessage.trim() ? (
+                                        <button
+                                            onClick={() => handleSendMessage()}
+                                            className="p-2.5 bg-white text-black rounded-xl hover:bg-gray-200 transition-all transform active:scale-95 shadow-lg shadow-white/5"
+                                        >
+                                            <Send size={18} className="ml-0.5" />
+                                        </button>
+                                    ) : isRecording ? (
+                                        <div className="flex items-center gap-1">
+                                            <button
+                                                type="button"
+                                                onClick={cancelRecording}
+                                                className="p-2.5 bg-red-500/10 text-red-500 rounded-xl hover:bg-red-500/20 transition-all"
+                                            >
+                                                <X size={18} />
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={async () => {
+                                                    stopRecording();
+                                                    // The audioBlob will be set in the stopRecording callback,
+                                                    // so we need an effect or manual trigger to upload it.
+                                                }}
+                                                className="p-2.5 bg-linear-to-r from-red-600 to-pink-600 text-white rounded-xl animate-pulse shadow-lg shadow-red-500/20"
+                                            >
+                                                <MicOff size={18} />
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <button
+                                            type="button"
+                                            onClick={startRecording}
+                                            className="p-2.5 bg-linear-to-r from-purple-600 to-pink-600 text-white rounded-xl hover:opacity-90 transition-all transform active:scale-95 shadow-lg shadow-purple-500/20"
+                                            title="Send Voice Message"
+                                        >
+                                            <Mic size={18} />
+                                        </button>
+                                    )}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
-            </main>
-        </div>
+                    )
+                }
+            </main >
+        </div >
     );
 }
